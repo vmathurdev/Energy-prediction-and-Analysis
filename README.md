@@ -4,15 +4,14 @@ Final year Bachelor’s thesis-based project on solar energy analytics. In a gro
 
 This data set contains an energy analysis for 12 different building shapes, which differ in glazing area, the distribution of glass, the orientation of the building, and other attributes. The dependent variables are heating load and cooling load.
 
-The dataset contains eight attributes (or features, denoted by X1...X8) and two responses (or outcomes, denoted by y1 and y2) and is available in EnergyEfficiency.csvPreview the document.
-
+The dataset contains eight attributes (or features, denoted by X1...X8) and two responses (or outcomes, denoted by y1 and y2).
 The R-code for the analysis on the cooling data is here.
 
 The aim is to use the eight features to predict the heating load using neural network analyses.
 
 Tasks
 
-Prepare the data for neural network analysis. You may use the code demonstrated in class with the cooling load dependent variable.
+Prepare the data for neural network analysis. 
 Develop predictions of the heating load for the training and the test data sets. Compare the predictive accuracy for the training and test data sets. Comment on any differences between the results for the training and test data.
 Try models with varying numbers of node and 1 or 2 hidden layers. Which seems to work the best?
 Develop predictions for the training and test data set using linear regression. Compare the results of the regression with the results obtained using neural networks. Which method is more accurate? How does the accuracy of regression differ for the training and test data?
