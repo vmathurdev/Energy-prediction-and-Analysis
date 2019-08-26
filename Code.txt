@@ -1,0 +1,103 @@
+setwd("C:/Users/samsung/Desktop/homework")
+energy <- read.csv("./EnergyEfficiency.csv")
+str(energy)
+install.packages("caret")
+library(caret)
+energy$Orientation <- factor(energy$Orientation)
+energy$Glazing.Area.Distribution <- factor(energy$Glazing.Area.Distribution)
+dummies <- dummyVars(Heating.Load+Cooling.Load ~ ., data=energy)
+head(dummies)
+temp <- as.data.frame(predict(dummies, newdata=energy))
+head(temp)
+energy.data <- cbind(temp,energy[,9:10])
+dim(energy.data)
+mx<-max(energy.data$Relative.Compactness)
+mn<-min(energy.data$Relative.Compactness)
+energy.data$Relative.Compactness <- (energy.data$Relative.Compactness -mn)/(mx-mn)
+head(energy.data)
+
+# Scale the data.
+energy.max <- apply(energy.data,2,max)
+energy.min <- apply(energy.data,2,min)
+energy.scaled <- as.data.frame(scale(energy.data, center = energy.min, scale = energy.max - energy.min))
+
+set.seed(111)
+sub <- sample(nrow(energy.scaled), floor(nrow(energy.scaled)*.75))
+TrainData <- energy.scaled[sub,]
+TestData <- energy.scaled[-sub,]
+nrow(TrainData)
+str(TrainData)
+nrow(TestData)
+str(TestData)
+
+install.packages("neuralnet")
+library(neuralnet)
+energynames <- names(TrainData)
+energy.heating.equation <- as.formula(paste("Heating.Load ~", 
+            paste(energynames[!energynames %in% c("Cooling.Load","Heating.Load")],
+              collapse = " + ")))
+heating.nn  <- neuralnet(energy.heating.equation,
+             data=TrainData,hidden=c(3,3),rep=10)
+plot(heating.nn,rep="best")
+# Create predictions from the training data.
+str(TrainData)
+pr.heating <- compute(heating.nn,TrainData[,1:16])
+head(pr.heating$net.result) 
+# Convert the predictions back to the original scale.
+pr.nn_rescaled <- pr.heating$net.result*
+  (max(TrainData$Heating.Load)-min(TrainData$Heating.Load))+min(TrainData$Heating.Load)
+ 
+# Compute r and r-squared.
+r.heating <-cor(pr.nn_rescaled,TrainData$Heating.Load)
+rsquare.heating <- r.heating*r.heating
+rsquare.heating
+# Compute the mean square error.
+MSE.nn <- sum((pr.nn_rescaled - TrainData$Heating.Load)^2)/nrow(TrainData)
+MSE.nn
+sd((TrainData$Roof.Area))
+cor(TrainData)
+str(TrainData)
+TrainData.reg <- TrainData[,c(-4,-6,-11)]
+str(TrainData.reg)
+
+reg.model <- lm(Heating.Load ~ .,data=TrainData.reg )
+summary(reg.model)
+
+#Developing the predictions for test data set
+
+energynames1 <- names(TestData)
+energy.heating.equation1 <- as.formula(paste("Heating.Load ~", 
+                                            paste(energynames1[!energynames1 %in% c("Cooling.Load","Heating.Load")],
+                                                  collapse = " + ")))
+heating.nn1  <- neuralnet(energy.heating.equation1,
+                         data=TestData,hidden=c(5,5),rep=10)
+plot(heating.nn,rep="best")
+# Create predictions from the training data.
+str(TestData)
+pr.heating1 <- compute(heating.nn1,TestData[,1:16])
+head(pr.heating1$net.result) 
+# Convert the predictions back to the original scale.
+pr.nn_rescaled1 <- pr.heating1$net.result*
+  (max(TestData$Heating.Load)-min(TestData$Heating.Load))+min(TestData$Heating.Load)
+
+# Compute r and r-squared.
+r.heating <-cor(pr.nn_rescaled1,TestData$Heating.Load)
+rsquare.heating <- r.heating*r.heating
+rsquare.heating
+# Compute the mean square error.
+MSE.nn <- sum((pr.nn_rescaled - TestData$Heating.Load)^2)/nrow(TestData)
+MSE.nn
+sd((TestData$Roof.Area))
+cor(TestData)
+str(TestData)
+TestData.reg <- TestData[,c(-4,-6,-11)]
+str(TestData.reg)
+
+reg.model1 <- lm(Heating.Load ~ .,data=TestData.reg3 )
+summary(reg.model1)
+
+
+
+
+
+
