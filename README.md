@@ -1,5 +1,5 @@
 # Metric-Analysis-of-effect-of-Partial-Shading-on-Solar-Panels
-Final year Bachelor’s thesis-based project on solar energy analytics. In a group of two, pre-processed data and developed a model to predict the efficiency of solar panel installations during shading. The results of the model across different installations were 90% accurate.
+Final year Bachelor’s thesis-based project on solar energy analytics. Pre-processed data and developed a model to predict the efficiency of solar panel installations on building during shading. The results of the model across different installations were 90% accurate.
 
 
 This data set contains an energy analysis for 12 different building shapes, which differ in glazing area, the distribution of glass, the orientation of the building, and other attributes. The dependent variables are heating load and cooling load.
